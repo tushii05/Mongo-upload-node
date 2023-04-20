@@ -12,6 +12,14 @@ module.exports = {
     _delete
 };
 
+// async function getAll({ offset = 0, limit = 100, orderBy = 'id', orderType = 'desc', search = null }) {
+//     const regex = new RegExp(search, 'i');
+//     const reels = await Reel.find({ name: regex })
+//         .skip(parseInt(offset))
+//         .limit(parseInt(limit))
+//         .sort({ [orderBy]: orderType });
+//     return reels;
+// }
 async function getAll({ offset = 0, limit = 100, orderBy = 'id', orderType = 'desc', search = null }) {
     const regex = new RegExp(search, 'i');
     const reels = await Reel.find({ name: regex })
@@ -28,7 +36,7 @@ async function create(params) {
 }
 
 async function update(id, params) {
-    const updatedReel = await db.reels.findByIdAndUpdate(id, params, { new: true });
+    const updatedReel = await Reel.findByIdAndUpdate(id, params, { new: true });
     if (!updatedReel) throw 'Reel not found';
     return updatedReel;
 }
@@ -41,7 +49,7 @@ async function findById(id) {
 
 
 async function _delete(id) {
-    const deletedReel = await db.eels.findByIdAndDelete(id);
+    const deletedReel = await Reel.findByIdAndDelete(id);
     if (!deletedReel) throw 'Reel not found';
     return true;
 }

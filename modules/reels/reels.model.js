@@ -11,6 +11,7 @@ const reelsSchema = new mongoose.Schema({
 
     filename: { type: String, required: true },
     url: { type: String, required: true },
+    count: { type: Number, required: true }
 }, {
     toJSON: {
         transform: function (doc, ret) {
