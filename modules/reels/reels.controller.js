@@ -2,22 +2,17 @@ const express = require('express');
 const router = express.Router();
 const Reel = require('./reels.model');
 const reelsService = require('./reels.service');
-const dotenv = require('dotenv');
-dotenv.config();
-
-const fs = require('fs');
-const path = require('path');
 const Grid = require('gridfs-stream');
 const multer = require('multer');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+dotenv.config();
 
 
-// const ASSET_URL = "http://192.168.1.34:5050"
-// const conn = mongoose.createConnection("mongodb://127.0.0.1:27017/videoMongo");
 
 const conn = mongoose.createConnection(process.env.MONGO_URI);
 
-// Initialize GridFS
+
 let gfs;
 conn.once('open', () => {
     gfs = Grid(conn.db, mongoose.mongo);
@@ -36,8 +31,6 @@ const storage = multer.diskStorage({
 });
 
 
-
-
 const upload = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
@@ -48,6 +41,7 @@ const upload = multer({
         }
     }
 });
+
 
 function uploadVideo(req, res, next) {
     const cpUpload = upload.single('video');
@@ -63,7 +57,7 @@ function uploadVideo(req, res, next) {
 }
 
 
-//for array from 
+//-----------------for array from-------------------------- 
 
 // function uploadVideo(req, res, next) {
 //     const cpUpload = upload.array('videos', 5);
@@ -77,47 +71,25 @@ function uploadVideo(req, res, next) {
 //     });
 // }
 
-
-
-
 router.get('/', getAll);
 router.post('/store', uploadVideo, store);
 router.get('/:id', getById);
 router.put('/:id', uploadVideo, update);
 router.delete('/:id', _delete);
+
 module.exports = router;
 
 
-
-// function getAll(req, res, next) {
-//     Reel.find(req.query)
-//         .then(data => res.json({ message: 'Success', data }))
-//         .catch(next);
-// }
-
-// async function getAll(req, res, next) {
-//     const { count = 0, limit = 5 } = req.query;
-//     const totalCount = await Reel.countDocuments();
-
-//     // Calculate the skip and limit values based on the given count and limit
-//     const skip = Math.min(parseInt(count), totalCount); // Use Math.min to ensure skip doesn't exceed totalCount
-//     const queryLimit = parseInt(limit);
-
-//     Reel.find()
-//         .skip(skip)
-//         .limit(queryLimit)
-//         .then(data => res.json({ message: 'Success', data }))
-//         .catch(next);
-// }
-
 async function getAll(req, res, next) {
-    const { count = 0, limit = 5 } = req.query;
-    const totalCount = await Reel.countDocuments();
+    const { count = 0, limit = 6 } = req.query;
+    // const totalCount = await Reel.countDocuments();
 
     // Calculate the skip and limit values based on the given count and limit
     const queryLimit = parseInt(limit);
-    const skip = Math.max(0, parseInt(count) - 2); // Subtract 2 from count to get 2 data before count
+    // const skip = Math.min(parseInt(count), totalCount); // Use Math.min to ensure skip doesn't exceed totalCount
 
+    const skip = Math.max(0, parseInt(count) - 3); // Subtract 2 from count to get 2 data before count
+    // Reel.find(req.query)
     Reel.find()
         .skip(skip)
         .limit(queryLimit)
@@ -126,13 +98,7 @@ async function getAll(req, res, next) {
 }
 
 
-
-
-
-
-
-
-//for array from 
+//___________________for array from_________________________________
 
 // function store(req, res, next) {
 //     const videos = [];
@@ -153,7 +119,6 @@ async function getAll(req, res, next) {
 
 
 
-
 async function store(req, res, next) {
     if (req.file) {
         const file = req.file;
@@ -166,9 +131,6 @@ async function store(req, res, next) {
         .then(data => { res.json({ message: 'Success', data }) })
         .catch(next);
 }
-
-
-
 
 
 function getById(req, res, next) {
@@ -200,68 +162,6 @@ async function update(req, res, next) {
 
 function _delete(req, res, next) {
     Reel.findByIdAndDelete(req.params.id)
-        .then(data => res.json({ message: 'Success', data }))
+        .then(() => res.json({ message: 'Successful Deleted' }))
         .catch(next);
 }
-
-
-
-//Helper
-
-// const crypto = require('crypto');
-
-// function encryptData(data) {
-//     // Replace with your desired encryption algorithm and secret key
-//     const algorithm = 'aes-128-cbc';
-//     const secretKey = crypto.randomBytes(16); // Generate a secret key of 16 bytes (128 bits)
-
-//     const iv = crypto.randomBytes(16); // Generate a random IV (initialization vector)
-//     const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
-//     const encryptedData = Buffer.concat([cipher.update(data, 'utf8'), cipher.final()]);
-
-//     // Return the encrypted data, secret key, and IV as hex strings
-//     return {
-//         iv: iv.toString('hex'),
-//         encryptedData: encryptedData.toString('hex'),
-//         secretKey: secretKey.toString('hex') // Convert the secret key to a hex string
-//     };
-// }
-
-// function getById(req, res, next) {
-//     reelsService.findById(req.params.id)
-//         .then(data => {
-//             const dataString = data.toString(); // Convert data to a string
-//             const encryptedData = encryptData(dataString.slice(0, 5)); // Encrypt the first 10 characters of the data
-//             const shareLink = `http://192.168.1.34:5050/api/reels/${encryptedData.iv}/${encryptedData.encryptedData}/${encryptedData.secretKey}`;
-//             res.json({ message: 'Success', shareLink });
-//         })
-//         .catch(next);
-// }
-
-
-// function encryptData(data) {
-//     // Replace with your desired encryption algorithm and secret key
-//     const algorithm = 'aes-128-cbc';
-//     const secretKey = crypto.randomBytes(16); // Generate a secret key of 16 bytes (128 bits)
-
-//     const iv = crypto.randomBytes(16); // Generate a random IV (initialization vector)
-//     const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
-//     const encryptedData = Buffer.concat([cipher.update(data, 'utf8'), cipher.final()]);
-
-//     // Return the encrypted data, secret key, and IV as hex strings
-//     return {
-//         iv: iv.toString('hex'),
-//         encryptedData: encryptedData.toString('hex'),
-//         secretKey: secretKey.toString('hex') // Convert the secret key to a hex string
-//     };
-// }
-
-// function getById(req, res, next) {
-//     reelsService.findById(req.params.id)
-//         .then(data => {
-//             const encryptedData = encryptData(data.toString()); // Encrypt the entire data string
-//             const shareLink = `http://192.168.1.34:5050/api/reels/${encryptedData.iv}/${encryptedData.encryptedData}/${encryptedData.secretKey}`;
-//             res.json({ message: 'Success', shareLink });
-//         })
-//         .catch(next);
-// }

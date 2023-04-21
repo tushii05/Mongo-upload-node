@@ -10,6 +10,26 @@ router.post('/register', registerSchema, register);
 
 module.exports = router;
 
+
+function registerSchema(req, res, next) {
+    const schema = Joi.object({
+        firstName: Joi.string().required(),
+        lastName: Joi.string().required(),
+        email: Joi.string().email().required(),
+        phoneNo: Joi.number().required(),
+        password: Joi.string().min(6).required(),
+    });
+    validateRequest(req, next, schema);
+}
+
+
+function register(req, res, next) {
+    usersService.register(req.body)
+        .then(data => res.json({ message: 'Registration successful', data }))
+        .catch(next);
+}
+
+
 function authenticateSchema(req, res, next) {
     const schema = Joi.object({
         email: Joi.string().email().required(),
@@ -18,25 +38,9 @@ function authenticateSchema(req, res, next) {
     validateRequest(req, next, schema);
 }
 
+
 function authenticate(req, res, next) {
     usersService.authenticate(req.body)
         .then(data => res.json({ message: "Success", data }))
-        .catch(next);
-}
-
-function registerSchema(req, res, next) {
-    const schema = Joi.object({
-        firstName: Joi.string().required(),
-        lastName: Joi.string().required(),
-        email: Joi.string().email().required(),
-        phoneNo: Joi.number().required(),
-        password: Joi.string().min(6).required(), 
-    });
-    validateRequest(req, next, schema);
-}
-
-function register(req, res, next) {
-    usersService.register(req.body)
-        .then(() => res.json({ message: 'Registration successful' }))
         .catch(next);
 }
