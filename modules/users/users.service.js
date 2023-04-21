@@ -34,6 +34,6 @@ async function authenticate({ email, password }) {
     if (!isPasswordMatch) {
         throw 'Password is incorrect';
     }
-    const token = jwt.sign({ sub: user._id.toString() }, process.env.SECRETSTRING, { expiresIn: '1d' });
+    const token = jwt.sign({ sub: user._id.toString() }, process.env.SECRETSTRING, { expiresIn: '7d' });
     return { ...user, token };
 }

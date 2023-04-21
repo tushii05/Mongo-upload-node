@@ -44,5 +44,5 @@ async function findById(id) {
 async function _delete(id) {
     const deletedReel = await Reel.findByIdAndDelete(id);
     if (!deletedReel) throw 'Reel not found';
-    return true;
+    return deletedReel;
 }

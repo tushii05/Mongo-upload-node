@@ -159,6 +159,6 @@ async function update(req, res, next) {
 
 function _delete(req, res, next) {
     Reel.findByIdAndDelete(req.params.id)
-        .then(() => res.json({ message: 'Successful Deleted' }))
+        .then(data => res.json({ message: 'Successful Deleted', data }))
         .catch(next);
 }

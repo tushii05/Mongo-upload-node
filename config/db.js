@@ -1,9 +1,14 @@
+const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const mongoose = require('mongoose');
-const connectionOptions = { useNewUrlParser: true, useUnifiedTopology: true };
+const connectionOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+};
+
 mongoose.connect(process.env.MONGO_URI, connectionOptions);
+
 mongoose.Promise = global.Promise;
 
 const db = mongoose.connection;

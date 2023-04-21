@@ -25,7 +25,7 @@ function registerSchema(req, res, next) {
 
 function register(req, res, next) {
     usersService.register(req.body)
-        .then(data => res.json({ message: 'Registration successful', data }))
+        .then(data => res.json({ message: 'Registration successful. Now Login.......', data }))
         .catch(next);
 }
 
