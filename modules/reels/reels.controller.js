@@ -8,10 +8,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config();
 
-
-
 const conn = mongoose.createConnection(process.env.MONGO_URI);
-
 
 let gfs;
 conn.once('open', () => {
@@ -81,7 +78,7 @@ module.exports = router;
 
 
 async function getAll(req, res, next) {
-    const { count = 0, limit = 6 } = req.query;
+    const { count = 0, limit = 5 } = req.query;
     // const totalCount = await Reel.countDocuments();
 
     // Calculate the skip and limit values based on the given count and limit
@@ -128,7 +125,7 @@ async function store(req, res, next) {
     const currentCount = await Reel.countDocuments();
     req.body.count = currentCount + 1;
     Reel.create(req.body)
-        .then(data => { res.json({ message: 'Success', data }) })
+        .then(data => res.json({ message: 'Success', data }))
         .catch(next);
 }
 
