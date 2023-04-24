@@ -18,7 +18,8 @@ async function getAll({ offset = 0, limit = 100, orderBy = 'id', orderType = 'de
     const reels = await Reel.find({ name: regex })
         .skip(parseInt(offset))
         .limit(parseInt(limit))
-        .sort({ [orderBy]: orderType });
+        .sort({ [orderBy]: orderType })
+        .stream();
     return reels;
 }
 
