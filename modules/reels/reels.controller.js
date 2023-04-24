@@ -83,9 +83,9 @@ async function getAll(req, res, next) {
 
     // Calculate the skip and limit values based on the given count and limit
     const queryLimit = parseInt(limit);
-    // const skip = Math.min(parseInt(count), totalCount);
+    // const skip = Math.min(parseInt(count), totalCount); // Use Math.min to ensure skip doesn't exceed totalCount
 
-    const skip = Math.max(0, parseInt(count) - 3); // Subtract 3 from count to get 2 data before count
+    const skip = Math.max(0, parseInt(count) - 3); // Subtract 2 from count to get 2 data before count
     // Reel.find(req.query)
     Reel.find()
         .skip(skip)
@@ -93,51 +93,6 @@ async function getAll(req, res, next) {
         .then(data => res.json({ message: 'Success', data }))
         .catch(next);
 }
-
-
-// async function getAll(req, res, next) {
-//     const { count = 0, limit = 5 } = req.query;
-//     const queryLimit = parseInt(limit);
-//     const skip = Math.max(0, parseInt(count) - 3);
-//     const cursor = Reel.find().skip(skip).limit(queryLimit).cursor();
-
-//     res.writeHead(200, { 'Content-Type': 'application/json' });
-//     res.write('{"message": "Success", "data":[');
-
-//     cursor.on('data', function (doc) {
-//         res.write(JSON.stringify(doc) + ',');
-//     });
-
-//     cursor.on('end', function () {
-//         res.write(']}');
-//         res.end();
-//     });
-
-//     cursor.on('error', function (err) {
-//         next(err);
-//     });
-// }
-
-// async function getAll(req, res, next) {
-//     const { count = 0, limit = 5 } = req.query;
-//     const queryLimit = parseInt(limit);
-//     const skip = Math.max(0, parseInt(count) - 3);
-//     const cursor = Reel.find().skip(skip).limit(queryLimit).cursor();
-
-//     const data = [];
-
-//     try {
-//         for await (const doc of cursor) {
-//             data.push(doc);
-//         }
-
-//         res.json({ message: 'Success', data });
-//     } catch (err) {
-//         next(err);
-//     }
-// }
-
-
 
 
 //___________________for array from_________________________________
