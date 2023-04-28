@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     status: { type: Number, required: true, default: 1 },
 }, {
+    timestamps: true,   //_____________for Created_At Time Updated_At Time___________________
     toJSON: {
         transform: function (doc, ret) {
             delete ret.hash;

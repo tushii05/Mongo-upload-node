@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+
 const reelsSchema = new mongoose.Schema({
 
     //for array from 
@@ -13,6 +14,7 @@ const reelsSchema = new mongoose.Schema({
     url: { type: String, required: true },
     count: { type: Number, required: true }
 }, {
+    timestamps: true,   //_____________for Created_At Time Updated_At Time___________________
     toJSON: {
         transform: function (doc, ret) {
             delete ret.hash;
